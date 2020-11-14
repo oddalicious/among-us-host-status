@@ -1,0 +1,27 @@
+{
+    "name": "DEFAULTS",
+    "version": "0.0.1",
+    "description": "TO BE DECUDED",
+    "main": "index.js",
+    "author": "Tim Patullock",
+    "type": "module",
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.4.0",
+        "beautify": "0.0.8",
+        "discord.js": "^12.2.0",
+        "dotenv": "^8.2.0",
+        "mongoose": "^5.10.14"
+    },
+    "scripts": {
+        "start": "node --experimental-json-modules index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "MY GITHUB URL"
+    },
+    "keywords": [
+        "heroku",
+        "discord.js"
+    ]
+}
