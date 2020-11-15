@@ -1,7 +1,7 @@
 {
-    "name": "DEFAULTS",
+    "name": "among-us-host-info",
     "version": "0.0.1",
-    "description": "TO BE DECUDED",
+    "description": "Bot that stores the IDS of people who are hosting Lobbies of Among Us in servers. Then allows other users to view a list of said lobbies if the hosts are in a voice channel on the server they request information on.",
     "main": "index.js",
     "author": "Tim Patullock",
     "type": "module",
@@ -9,8 +9,7 @@
         "@reduxjs/toolkit": "^1.4.0",
         "beautify": "0.0.8",
         "discord.js": "^12.2.0",
-        "dotenv": "^8.2.0",
-        "mongoose": "^5.10.14"
+        "dotenv": "^8.2.0"
     },
     "scripts": {
         "start": "node --experimental-json-modules index.js",
@@ -18,7 +17,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "MY GITHUB URL"
+        "url": "https://github.com/oddalicious/among-us-status-update"
     },
     "keywords": [
         "heroku",

@@ -51,18 +51,10 @@ client.on('message', (message) => {
     }
 })
 
-client.on('voiceStateUpdate', (_oldState, _newState) => {})
-
 client.on('presenceUpdate', (oldPresence, newPresence) => {
     if (newPresence?.user?.bot) {
         return false
     }
 
     PresenceSwitcher(oldPresence, newPresence)
-})
-
-client.on('userUpdate', (oldUser, newUser) => {
-    console.log('userUpdate')
-    console.log(oldUser)
-    console.log(newUser)
 })
