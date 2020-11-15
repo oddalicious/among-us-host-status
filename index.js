@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import config from './config.json'
 import { PresenceSwitcher } from './src/presence-switcher.js'
+import store from './src/store/store.js'
 
 dotenv.config()
 
@@ -44,7 +45,7 @@ client.on('message', (message) => {
 
             return message.channel.sendreply()
         }
-        command.execute(message, args)
+        command.execute(message, store, args)
     } catch (error) {
         console.error(error)
         message.reply('There was an error trying to execute that command!')
@@ -56,5 +57,5 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
         return false
     }
 
-    PresenceSwitcher(oldPresence, newPresence)
+    PresenceSwitcher(oldPresence, newPresence, store)
 })
