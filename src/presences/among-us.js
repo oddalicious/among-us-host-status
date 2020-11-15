@@ -1,4 +1,5 @@
-export const hosts = {}
+import { hostAdded, hostRemoved, hostsInGuild } from '../store/hostsSlice.js'
+import store from '../store/store.js'
 
 export default {
     name: 'among-us-host-presence',
@@ -10,7 +11,21 @@ export default {
             newPresence?.activities[0]?.applicationID ||
             oldPresence.activities[0]?.applicationID
 
-        return appId === '477175586805252107'
+        const newActivity = newPresence?.activities[0] || {}
+        const oldActivity = oldPresence?.activities[0] || {}
+
+        if (appId !== '477175586805252107') {
+            return false
+        }
+
+        if (
+            newActivity?.details === 'Hosting a game' ||
+            oldActivity.details === 'Hosting a game'
+        ) {
+            return true
+        }
+
+        return false
     },
     execute: (oldPresence, newPresence, store) => {
         const newActivity = newPresence?.activities[0]
@@ -20,52 +35,37 @@ export default {
             return
         }
 
-        const targetChannel = newPresence.guild.channels.cache.get(
-            '737528188145631262'
-        )
-
-        if (!targetChannel) {
-            return
-        }
-
         if (newActivity?.details === 'Hosting a game') {
-            addHost(newPresence, targetChannel)
+            addHost(newPresence, store)
         } else if (oldActivity?.details === 'Hosting a game') {
-            removeHost(oldPresence, targetChannel)
+            removeHost(oldPresence, store)
         }
     },
 }
 
-const addHost = (presence, targetChannel) => {
+const addHost = (presence) => {
     const { id: partyId } = presence.activities[0].party
     const { id: guildId } = presence.guild
     const { username, id: hostId } = presence.user
-    hosts[hostId] = { partyId, username, guildId, hostId }
+    store.dispatch(hostAdded({ partyId, username, guildId, id: hostId }))
 }
 
-const removeHost = (presence) => {
-    const hostId = presence.user.id
-    delete hosts[hostId]
+const removeHost = ({ user: { id } }) => {
+    store.dispatch(hostRemoved({ id }))
 }
 
-export const getHosts = (message) => {
-    const { guild } = message
-    return Object.values(hosts).map((host) => {
-        if (host.guildId !== guild.id) {
-            return
-        }
+export const getHosts = ({ guild }, store) => {
+    const hosts = hostsInGuild(store.getState(), guild.id)
 
-        const channels = guild.channels.cache.filter((c) => c.type === 'voice')
-        let userFoundInVoice = false
-        channels.forEach((channel) => {
-            if (channel.members.find((member) => member.id === host.hostId)) {
-                userFoundInVoice = true
-                return
-            }
-        })
+    return hosts.map((host) => {
+        const channel = guild.channels.cache.find(
+            (channel) =>
+                channel.type === 'voice' &&
+                channel.members.find((member) => member.id === host.id)
+        )
 
-        if (userFoundInVoice) {
-            return `${host.username} is hosting ${host.partyId}`
+        if (channel) {
+            return `${host.username} is hosting ${host.partyId} in ${channel.name}`
         }
 
         return
