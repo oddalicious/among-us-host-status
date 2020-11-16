@@ -56,6 +56,6 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
     if (newPresence?.user?.bot) {
         return false
     }
-
+    
     PresenceSwitcher(oldPresence, newPresence, store)
 })

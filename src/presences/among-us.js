@@ -1,7 +1,13 @@
-import { hostAdded, hostRemoved, hostsInGuild } from '../store/hostsSlice.js'
+import {
+    hostAdded,
+    hostRemoved,
+    getHosts,
+    getHostById,
+    hostUpdated,
+} from '../store/hostsSlice.js'
 import store from '../store/store.js'
 
-export default {
+const amongUsHostHandler = {
     name: 'among-us-host-presence',
     description:
         'Stores the lobby and ID of people hosting Among Us lobbies on the server',
@@ -36,28 +42,50 @@ export default {
         }
 
         if (newActivity?.details === 'Hosting a game') {
-            addHost(newPresence, store)
+            handleHostAddition(newPresence, store)
         } else if (oldActivity?.details === 'Hosting a game') {
             removeHost(oldPresence, store)
         }
     },
 }
 
-const addHost = (presence) => {
+const handleHostAddition = (presence, store) => {
+    const host = getHostById(store.getState(), presence.user.id)
+    if (host) {
+        return updateHost(presence, host, store)
+    }
+
+    addHost(presence, store)
+}
+
+const addHost = (presence, store) => {
     const { id: partyId } = presence.activities[0].party
-    const { id: guildId } = presence.guild
     const { username, id: hostId } = presence.user
-    store.dispatch(hostAdded({ partyId, username, guildId, id: hostId }))
+    const { id: guildId } = presence.guild
+    store.dispatch(
+        hostAdded({ partyId, username, id: hostId, guilds: [guildId] })
+    )
+}
+
+const updateHost = (presence, host, store) => {
+    const { id: hostId } = presence.user
+    const { id: guildId } = presence.guild
+    const guilds = [...host.guilds, guildId]
+
+    store.dispatch(hostUpdated({ id: hostId, changes: { guilds } }))
 }
 
 const removeHost = ({ user: { id } }) => {
     store.dispatch(hostRemoved({ id }))
 }
 
-export const getHosts = ({ guild }, store) => {
-    const hosts = hostsInGuild(store.getState(), guild.id)
+export const getHostStrings = ({ guild }, store) => {
+    const hosts = getHosts(store.getState())
 
     return hosts.map((host) => {
+        if (!host.guilds.includes(guild.id)) {
+            return
+        }
         const channel = guild.channels.cache.find(
             (channel) =>
                 channel.type === 'voice' &&
@@ -71,3 +99,5 @@ export const getHosts = ({ guild }, store) => {
         return
     })
 }
+
+export default amongUsHostHandler
