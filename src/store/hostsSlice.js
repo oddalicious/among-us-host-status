@@ -13,17 +13,22 @@ const hostsSlice = createSlice({
         hostRemoved: (state, action) => {
             hostsAdapter.removeOne(state, action.payload.id)
         },
+        hostUpdated: (state, action) => {
+            hostsAdapter.updateOne(state, action.payload)
+        },
     },
 })
 
-const hostsInGuild = (state, guildId) =>
-    hostsSelector.selectAll(state).filter((host) => host.guildId === guildId)
+const getHosts = (state) => hostsSelector.selectAll(state)
+const getHostById = (state, id) => hostsSelector.selectById(state, id)
 
-const { hostAdded, hostRemoved } = hostsSlice.actions
+const { hostAdded, hostRemoved, hostUpdated } = hostsSlice.actions
 
 export {
     hostsSlice,
     hostAdded,
     hostRemoved,
-    hostsInGuild,
+    hostUpdated,
+    getHosts,
+    getHostById,
 }

@@ -1,4 +1,4 @@
-import { getHosts } from '../presences/among-us.js'
+import { getHostStrings } from '../presences/among-us.js'
 
 export default {
     name: 'hosts',
@@ -6,7 +6,7 @@ export default {
         'Displays a list of the players in the Discord server hosting a lobby of Among Us',
     args: false,
     execute: (message, store, _args) => {
-        const output = getHosts(message, store).filter((value) => value)
+        const output = getHostStrings(message, store).filter((value) => value)
 
         if (output.length > 0) {
             return message.channel.send(output)
