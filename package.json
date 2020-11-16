@@ -2,7 +2,7 @@
     "name": "among-us-host-info",
     "version": "0.0.1",
     "description": "Bot that stores the IDS of people who are hosting Lobbies of Among Us in servers. Then allows other users to view a list of said lobbies if the hosts are in a voice channel on the server they request information on.",
-    "main": "index.js",
+    "main": "src/index.js",
     "author": "Tim Patullock",
     "type": "module",
     "dependencies": {
@@ -12,7 +12,7 @@
         "dotenv": "^8.2.0"
     },
     "scripts": {
-        "start": "node --experimental-json-modules index.js",
+        "start": "node --experimental-json-modules src/index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
