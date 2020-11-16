@@ -15,7 +15,7 @@ const amongUsHostHandler = {
     requirementsMatch: (oldPresence, newPresence) => {
         const appId =
             newPresence?.activities[0]?.applicationID ||
-            oldPresence.activities[0]?.applicationID
+            oldPresence?.activities[0]?.applicationID
 
         const newActivity = newPresence?.activities[0] || {}
         const oldActivity = oldPresence?.activities[0] || {}
@@ -26,7 +26,7 @@ const amongUsHostHandler = {
 
         if (
             newActivity?.details === 'Hosting a game' ||
-            oldActivity.details === 'Hosting a game'
+            oldActivity?.details === 'Hosting a game'
         ) {
             return true
         }
