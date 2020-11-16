@@ -60,10 +60,10 @@ const handleHostAddition = (presence, store) => {
 
 const addHost = (presence, store) => {
     const { id: partyId } = presence.activities[0].party
-    const { username, id: hostId } = presence.user
+    const { displayName, id: hostId } = presence.member
     const { id: guildId } = presence.guild
     store.dispatch(
-        hostAdded({ partyId, username, id: hostId, guilds: [guildId] })
+        hostAdded({ partyId, displayName, id: hostId, guilds: [guildId] })
     )
 }
 
@@ -93,7 +93,7 @@ export const getHostStrings = ({ guild }, store) => {
         )
 
         if (channel) {
-            return `${host.username} is hosting ${host.partyId} in ${channel.name}`
+            return `${host.displayName} is hosting ${host.partyId} in ${channel.name}`
         }
 
         return
