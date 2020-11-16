@@ -22,6 +22,10 @@ for (const file of commandFiles) {
 
 client.login(process.env.TOKEN)
 
+client.on('ready', () => {
+    client.user.setActivity('!among hosts')
+})
+
 client.on('message', (message) => {
     const { prefix } = config
 
@@ -56,6 +60,6 @@ client.on('presenceUpdate', (oldPresence, newPresence) => {
     if (newPresence?.user?.bot) {
         return false
     }
-    
+
     PresenceSwitcher(oldPresence, newPresence, store)
 })
