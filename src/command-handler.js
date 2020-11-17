@@ -3,11 +3,13 @@ import { client } from './boot.js'
 
 const fallback = (message) => {
     message.reply(
-        'Known commands currently:\n> `!among hosts` - Display users in your server hosting a lobby of Among Us on voice chat.'
+        `Known commands currently:
+        > \`!among hosts\` - Display users in your server hosting a lobby of Among Us on voice chat.
+        > \`!among clear\` - Clear hosts in your server from appearing in your list`
     )
 }
 
-export const CommandHandler = (message, store) => {
+export const CommandHandler = (message) => {
     const { prefix } = config
 
     const args = message.content.slice(prefix.length).trim().split(/ +/)
@@ -34,7 +36,7 @@ export const CommandHandler = (message, store) => {
 
             return message.channel.sendreply()
         }
-        command.execute(message, store, args)
+        command.execute(message, args)
     } catch (error) {
         console.error(error)
         message.reply('There was an error trying to execute that command!')
