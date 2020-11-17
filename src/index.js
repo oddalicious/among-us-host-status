@@ -1,20 +1,11 @@
-import { bootClient } from './boot.js'
-import { CommandHandler } from './command-handler.js'
-import { PresenceSwitcher } from './presence-switcher.js'
+import { ShardingManager } from 'discord.js'
+import dotenv from 'dotenv'
 
-const client = bootClient()
+dotenv.config()
 
-client.on('ready', () => {
-    console.log('Client connected as', client.user.username)
-    client.user.setActivity('!among hosts')
+const manager = new ShardingManager('./src/bot.js', {
+    token: process.env.TOKEN,
 })
 
-client.on('message', (message) => CommandHandler(message))
-
-client.on('presenceUpdate', (oldPresence, newPresence) => {
-    if (newPresence?.user?.bot) {
-        return false
-    }
-
-    PresenceSwitcher(oldPresence, newPresence)
-})
+manager.on('shardCreate', (shard) => console.log(`Launched shard ${shard.id}`))
+manager.spawn()

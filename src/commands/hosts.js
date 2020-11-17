@@ -5,8 +5,8 @@ export default {
     description:
         'Displays a list of the players in the Discord server hosting a lobby of Among Us',
     args: false,
-    execute: (message, _args) => {
-        const output = getHostStrings(message).filter((value) => value)
+    execute: (message) => {
+        const output = getHostStrings(message)
 
         if (output.length > 0) {
             return message.channel.send(output)

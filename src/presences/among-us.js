@@ -4,7 +4,7 @@ import {
     getHosts,
     getHostById,
     hostUpdated,
-} from '../store/hostsSlice.js'
+} from '../store/hosts-slice.js'
 import store from '../store/store.js'
 
 const amongUsHostHandler = {
@@ -84,24 +84,20 @@ const removeHost = ({ user: { id } }) => {
 }
 
 export const getHostStrings = ({ guild }) => {
+    const { id: guildId } = guild
     const hosts = getHosts(store.getState())
 
-    return hosts.map((host) => {
-        if (!host.guilds.includes(guild.id)) {
-            return
-        }
-        const channel = guild.channels.cache.find(
-            (channel) =>
-                channel.type === 'voice' &&
-                channel.members.find((member) => member.id === host.id)
+    return hosts
+        .filter(
+            (host) =>
+                host.guilds.includes(guildId) &&
+                guild.voiceStates.resolve(host.id)?.channelID
         )
-
-        if (channel) {
-            return `${host.displayName} is hosting ${host.partyId} in ${channel.name}`
-        }
-
-        return
-    })
+        .map((host) => {
+            return `${host.displayName} is hosting ${host.partyId} in ${
+                guild.voiceStates.resolve(host.id)?.channel?.name
+            }`
+        })
 }
 
 export default amongUsHostHandler
