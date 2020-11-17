@@ -1,6 +1,12 @@
 import config from '../config.json'
 import { client } from './boot.js'
 
+const fallback = (message) => {
+    message.reply(
+        'Known commands currently:\n> `!among hosts` - Display users in your server hosting a lobby of Among Us on voice chat.'
+    )
+}
+
 export const CommandHandler = (message, store) => {
     const { prefix } = config
 
@@ -9,6 +15,10 @@ export const CommandHandler = (message, store) => {
     if (!message.content.startsWith(prefix || message.author.bot)) return
 
     const commandName = args.shift().toLowerCase()
+
+    if (!commandName) {
+        return fallback(message)
+    }
 
     if (!client.commands.has(commandName)) return
 
