@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { hostsSlice } from './hostsSlice.js'
+import { hostsSlice } from './hosts-slice.js'
 
 const store = configureStore({
     reducer: {

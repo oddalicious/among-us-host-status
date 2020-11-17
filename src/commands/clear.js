@@ -1,12 +1,12 @@
-import { clearHosts, getHosts, updateHosts } from '../store/hostsSlice.js'
+import { clearHosts, getHosts, updateHosts } from '../store/hosts-slice.js'
 import store from '../store/store.js'
 
 export default {
     name: 'clear',
     description:
-        'Displays a list of the players in the Discord server hosting a lobby of Among Us',
+        'Clears your guild from the members currently hosting, this can be used to clean up stale hosts',
     args: false,
-    execute: (message, _args) => {
+    execute: (message) => {
         message.reply('Clearing hosts from this Server!')
 
         clearGuildFromHosts(message.guild.id)

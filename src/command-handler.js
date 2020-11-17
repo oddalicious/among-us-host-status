@@ -1,15 +1,17 @@
-import config from '../config.json'
+import config from '../config.js'
 import { client } from './boot.js'
 
 const fallback = (message) => {
+    const commandsString = client.commands.reduce((acc, command) => {
+        return `${acc}\n\`> ${command.name}:\` ${command.description}`
+    }, '')
     message.reply(
-        `Known commands currently:
-        > \`!among hosts\` - Display users in your server hosting a lobby of Among Us on voice chat.
-        > \`!among clear\` - Clear hosts in your server from appearing in your list`
+        `Known commands currently:${commandsString}
+`
     )
 }
 
-export const CommandHandler = (message) => {
+export const commandHandler = (message) => {
     const { prefix } = config
 
     const args = message.content.slice(prefix.length).trim().split(/ +/)

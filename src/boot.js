@@ -1,5 +1,5 @@
 import Discord from 'discord.js'
-import dotenv from 'dotenv'
+
 import fs from 'fs'
 
 let client
@@ -9,7 +9,7 @@ const setupMessageCommands = () => {
 
     const commandFiles = fs
         .readdirSync(`./src/commands`)
-        .filter((file) => file.endsWith(''))
+        .filter((file) => file.endsWith('.js'))
 
     for (const file of commandFiles) {
         import(`../src/commands/${file}`).then(({ default: command }) => {
@@ -19,8 +19,6 @@ const setupMessageCommands = () => {
 }
 
 const bootClient = () => {
-    dotenv.config()
-
     client = new Discord.Client()
 
     setupMessageCommands()
