@@ -1,6 +1,6 @@
 import { bootClient } from './boot.js'
-import { CommandHandler } from './command-handler.js'
-import { PresenceSwitcher } from './presence-switcher.js'
+import { presenceHandler } from './command-handler.js'
+import { presenceHandler } from './presence-handler.js'
 
 const client = bootClient()
 
@@ -9,12 +9,12 @@ client.on('ready', () => {
     client.user.setActivity('!among hosts')
 })
 
-client.on('message', (message) => CommandHandler(message))
+client.on('message', (message) => presenceHandler(message))
 
 client.on('presenceUpdate', (oldPresence, newPresence) => {
     if (newPresence?.user?.bot) {
         return false
     }
 
-    PresenceSwitcher(oldPresence, newPresence)
+    presenceHandler(oldPresence, newPresence)
 })
