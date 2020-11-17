@@ -13,53 +13,55 @@ const amongUsHostHandler = {
         'Stores the lobby and ID of people hosting Among Us lobbies on the server',
     args: false,
     requirementsMatch: (oldPresence, newPresence) => {
-        const appId =
-            newPresence?.activities[0]?.applicationID ||
-            oldPresence?.activities[0]?.applicationID
+        const newActivity = fetchAmongUsActivity(newPresence)
 
-        const newActivity = newPresence?.activities[0] || {}
-        const oldActivity = oldPresence?.activities[0] || {}
+        const oldActivity = fetchAmongUsActivity(oldPresence)
 
-        if (appId !== '477175586805252107') {
-            return false
-        }
+        if (oldActivity.details === newActivity.details) return false
 
         if (
-            newActivity?.details === 'Hosting a game' ||
-            oldActivity?.details === 'Hosting a game'
+            newActivity.details === 'Hosting a game' ||
+            oldActivity.details === 'Hosting a game'
         ) {
             return true
         }
 
         return false
     },
-    execute: (oldPresence, newPresence, store) => {
-        const newActivity = newPresence?.activities[0]
-        const oldActivity = oldPresence?.activities[0]
+    execute: (oldPresence, newPresence) => {
+        const newActivity = fetchAmongUsActivity(newPresence)
+        const oldActivity = fetchAmongUsActivity(oldPresence)
 
         if (oldActivity?.details === newActivity?.details) {
             return
         }
 
         if (newActivity?.details === 'Hosting a game') {
-            handleHostAddition(newPresence, store)
+            handleHostAddition(newPresence)
         } else if (oldActivity?.details === 'Hosting a game') {
-            removeHost(oldPresence, store)
+            removeHost(oldPresence)
         }
     },
 }
 
-const handleHostAddition = (presence, store) => {
+const handleHostAddition = (presence) => {
     const host = getHostById(store.getState(), presence.user.id)
     if (host) {
-        return updateHost(presence, host, store)
+        return updateHost(presence, host)
     }
 
-    addHost(presence, store)
+    addHost(presence)
 }
 
-const addHost = (presence, store) => {
-    const { id: partyId } = presence.activities[0].party
+const fetchAmongUsActivity = (presence) =>
+    presence?.activities?.find(
+        (activity) => activity.applicationID === '477175586805252107'
+    ) || {}
+
+const addHost = (presence) => {
+    const {
+        party: { id: partyId },
+    } = fetchAmongUsActivity(presence)
     const { displayName, id: hostId } = presence.member
     const { id: guildId } = presence.guild
     store.dispatch(
@@ -67,7 +69,7 @@ const addHost = (presence, store) => {
     )
 }
 
-const updateHost = (presence, host, store) => {
+const updateHost = (presence, host) => {
     const { id: hostId } = presence.user
     const { id: guildId } = presence.guild
     const guilds = [...host.guilds, guildId]
@@ -76,10 +78,12 @@ const updateHost = (presence, host, store) => {
 }
 
 const removeHost = ({ user: { id } }) => {
-    store.dispatch(hostRemoved({ id }))
+    if (getHostById(store.getState(), id)) {
+        store.dispatch(hostRemoved({ id }))
+    }
 }
 
-export const getHostStrings = ({ guild }, store) => {
+export const getHostStrings = ({ guild }) => {
     const hosts = getHosts(store.getState())
 
     return hosts.map((host) => {

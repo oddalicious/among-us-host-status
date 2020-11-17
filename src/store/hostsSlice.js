@@ -16,13 +16,25 @@ const hostsSlice = createSlice({
         hostUpdated: (state, action) => {
             hostsAdapter.updateOne(state, action.payload)
         },
+        updateHosts: (state, action) => {
+            hostsAdapter.updateMany(state, action.payload)
+        },
+        clearHosts: (state, action) => {
+            hostsAdapter.removeMany(state, action.payload)
+        },
     },
 })
 
 const getHosts = (state) => hostsSelector.selectAll(state)
 const getHostById = (state, id) => hostsSelector.selectById(state, id)
 
-const { hostAdded, hostRemoved, hostUpdated } = hostsSlice.actions
+const {
+    hostAdded,
+    hostRemoved,
+    hostUpdated,
+    clearHosts,
+    updateHosts,
+} = hostsSlice.actions
 
 export {
     hostsSlice,
@@ -31,4 +43,6 @@ export {
     hostUpdated,
     getHosts,
     getHostById,
+    clearHosts,
+    updateHosts,
 }
