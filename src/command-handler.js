@@ -9,7 +9,7 @@ const fallback = (message) => {
     )
 }
 
-export const CommandHandler = (message) => {
+export const presenceHandler = (message) => {
     const { prefix } = config
 
     const args = message.content.slice(prefix.length).trim().split(/ +/)

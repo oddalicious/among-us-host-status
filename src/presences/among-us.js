@@ -4,7 +4,7 @@ import {
     getHosts,
     getHostById,
     hostUpdated,
-} from '../store/hostsSlice.js'
+} from '../store/hosts-slice.js'
 import store from '../store/store.js'
 
 const amongUsHostHandler = {

@@ -1,4 +1,4 @@
-import { clearHosts, getHosts, updateHosts } from '../store/hostsSlice.js'
+import { clearHosts, getHosts, updateHosts } from '../store/hosts-slice.js'
 import store from '../store/store.js'
 
 export default {
